@@ -181,8 +181,8 @@
                 <div>💥 <strong>Petacereza (150):</strong> Explosión 3x3.</div>
                 <div>❄️ <strong>Guisante Helado (175):</strong> Ralentiza.</div>
                 <div>🌿 <strong>Repetidor (200):</strong> Disparo doble.</div>
-                <div>💣 <strong>Papatum (25):</strong> Mina destructiva.</div>
-                <div>🍉 <strong>Lanzasandías (300):</strong> Daño pesado en área.</div>
+                <div>💣 <strong>Papatum (25):</strong> Mina 3x3 al armarse.</div>
+                <div>🍉 <strong>Lanzasandías (300):</strong> Daño directo + 50% en área.</div>
             </div>
 
             <button onclick="startGame()" class="pvz-font text-2xl bg-gradient-to-r from-emerald-500 to-green-600 hover:from-emerald-400 hover:to-green-500 text-white px-8 py-2.5 rounded-2xl border-4 border-yellow-300 shadow-2xl transition-transform hover:scale-105 active:scale-95">
@@ -218,7 +218,7 @@
             <div class="text-7xl mb-2 animate-bounce">🏆🌻</div>
             <h2 class="pvz-font text-5xl text-yellow-300 drop-shadow-[0_4px_4px_rgba(0,0,0,1)] mb-2">¡VICTORIA ABSOLUTA!</h2>
             <p class="text-emerald-100 mb-6 text-lg max-w-md">
-                ¡Sobreviviste durante los 10 minutos enteros y defendiste exitosamente tu jardín!
+                ¡Sobreviviste durante los 7 minutos enteros y defendiste exitosamente tu jardín!
             </p>
             <button onclick="restartGame()" class="pvz-font text-2xl bg-emerald-500 hover:bg-emerald-400 text-white px-8 py-3 rounded-xl border-4 border-yellow-300 shadow-xl transition-transform hover:scale-105">
                 JUGAR OTRA RONDA 🎮
@@ -801,7 +801,7 @@ function update(dt) {
                             }
                         }, 150);
                     } else if (plant.id === 'melonpult') {
-                        projectiles.push({ x: fireX, y: fireY, row: r, speed: 250, type: 'melon', damage: 80, splash: true });
+                        projectiles.push({ x: fireX, y: fireY, row: r, speed: 250, type: 'melon', damage: 100, splash: true });
                     }
                 }
             }
@@ -835,18 +835,25 @@ function update(dt) {
         for (let j = 0; j < zombies.length; j++) {
             const z = zombies[j];
             if (z.row === p.row && Math.abs(z.x - p.x) < 25) {
+                // Direct target takes full damage
                 z.hp -= p.damage;
+
                 if (p.type === 'freeze') {
                     z.slowTimer = 3.5;
                 }
                 
-                // Melon Splash Damage (Affects adjacent rows/cells)
+                // Melon Splash Damage: Direct hit takes full damage, surrounding area takes 50% damage
                 if (p.splash) {
                     sounds.playExplosion();
                     createExplosionParticles(p.x, p.y, '#15803d', 20);
+                    const splashRadius = 130; // Radius covers adjacent cells and rows
+
                     zombies.forEach(otherZ => {
-                        if (otherZ !== z && Math.hypot(otherZ.x - p.x, (otherZ.row - p.row) * CELL_HEIGHT) < 120) {
-                            otherZ.hp -= p.damage * 0.5;
+                        if (otherZ !== z) {
+                            const dist = Math.hypot(otherZ.x - p.x, (otherZ.row - p.row) * CELL_HEIGHT);
+                            if (dist <= splashRadius) {
+                                otherZ.hp -= p.damage * 0.5; // 50% area splash damage
+                            }
                         }
                     });
                 } else {
@@ -890,10 +897,21 @@ function update(dt) {
         if (col >= 0 && col < COLS) {
             const plant = grid[z.row][col];
             if (plant) {
+                // Potato Mine 3x3 Explosion Mechanic
                 if (plant.id === 'potatomine' && plant.armed) {
                     sounds.playExplosion();
-                    createExplosionParticles(z.x, z.y, '#f59e0b', 25);
-                    z.hp -= 1000;
+                    const minePx = GRID_OFFSET_X + col * CELL_WIDTH + CELL_WIDTH / 2;
+                    const minePy = GRID_OFFSET_Y + z.row * CELL_HEIGHT + CELL_HEIGHT / 2;
+                    createExplosionParticles(minePx, minePy, '#f59e0b', 30);
+
+                    // Deals heavy 3x3 area damage to all zombies in adjacent rows and columns
+                    zombies.forEach(otherZ => {
+                        const zCellCol = Math.floor((otherZ.x - GRID_OFFSET_X) / CELL_WIDTH);
+                        if (Math.abs(otherZ.row - z.row) <= 1 && Math.abs(zCellCol - col) <= 1) {
+                            otherZ.hp -= 1000;
+                        }
+                    });
+
                     grid[z.row][col] = null;
                     continue;
                 }
