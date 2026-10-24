@@ -96,7 +96,7 @@
             <!-- Timer & Wave Progress -->
             <div class="flex-1 max-w-md mx-2">
                 <div class="flex justify-between items-center text-xs font-bold mb-1 text-emerald-200">
-                    <span id="timer-display">⏱️ Tiempo restante: 10:00</span>
+                    <span id="timer-display">⏱️ Tiempo restante: 07:00</span>
                     <span id="wave-display" class="text-amber-400">🌊 Oleada: Inicial</span>
                 </div>
                 <div class="w-full bg-gray-900 rounded-full h-3.5 border border-emerald-700 overflow-hidden relative">
@@ -138,27 +138,54 @@
         <canvas id="gameCanvas" width="1000" height="600" class="block bg-emerald-900 cursor-pointer"></canvas>
 
         <!-- Start / Menu Overlay Screen -->
-        <div id="screen-start" class="absolute inset-0 bg-black/85 backdrop-blur-md flex flex-col items-center justify-center p-6 text-center z-20">
-            <h1 class="pvz-font text-5xl md:text-6xl text-emerald-400 drop-shadow-[0_5px_5px_rgba(0,0,0,0.8)] mb-2">
+        <div id="screen-start" class="absolute inset-0 bg-black/90 backdrop-blur-md flex flex-col items-center justify-center p-6 text-center z-20 overflow-y-auto">
+            <h1 class="pvz-font text-4xl md:text-5xl text-emerald-400 drop-shadow-[0_5px_5px_rgba(0,0,0,0.8)] mb-1">
                 PLANTAS <span class="text-amber-400">vs</span> ZOMBIS
             </h1>
-            <p class="text-emerald-200 text-sm md:text-base max-w-lg mb-6">
-                Defiende tu jardín durante <strong class="text-yellow-400">10 minutos</strong> frente a oleadas continuas de zombis generados por RNG. ¡Usa tus plantas estratégicamente!
+            <p class="text-emerald-200 text-xs md:text-sm max-w-lg mb-4">
+                Defiende tu jardín durante <strong class="text-yellow-400">7 minutos</strong>. ¡Selecciona tu nivel de dificultad!
             </p>
 
-            <!-- Guide grid -->
-            <div class="grid grid-cols-2 md:grid-cols-4 gap-2 text-left bg-emerald-950/80 p-4 rounded-xl border border-emerald-700 max-w-2xl mb-6 text-xs">
-                <div>🌻 <strong>Girasol (50):</strong> Produce sol.</div>
-                <div>🌱 <strong>Lanzaguisantes (100):</strong> Disparo básico.</div>
-                <div>🛡️ <strong>Nuez (50):</strong> Bloquea zombis.</div>
-                <div>💥 <strong>Petacereza (150):</strong> Explota en área 3x3.</div>
-                <div>❄️ <strong>Guisante Helado (175):</strong> Ralentiza.</div>
-                <div>🌿 <strong>Repetidor (200):</strong> Disparo doble.</div>
-                <div>💣 <strong>Papatum (25):</strong> Mina terrestre.</div>
-                <div>🧺 <strong>Pala:</strong> Remueve plantas.</div>
+            <!-- Difficulty Selection Cards -->
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-3 w-full max-w-3xl mb-4">
+                <button onclick="setDifficulty('facil')" id="diff-facil" class="diff-btn bg-emerald-900/80 border-2 border-emerald-500 hover:bg-emerald-700 p-3 rounded-xl flex flex-col items-center transition-all">
+                    <span class="text-2xl mb-1">🌱</span>
+                    <span class="pvz-font text-lg text-emerald-300">Fácil</span>
+                    <span class="text-[10px] text-emerald-100 mt-1">Zombis lentos, pocas hordas y el Zombiestein aparece al final.</span>
+                </button>
+
+                <button onclick="setDifficulty('normal')" id="diff-normal" class="diff-btn bg-amber-900/80 border-2 border-amber-500 hover:bg-amber-700 p-3 rounded-xl flex flex-col items-center transition-all">
+                    <span class="text-2xl mb-1">🌻</span>
+                    <span class="pvz-font text-lg text-amber-300">Normal</span>
+                    <span class="text-[10px] text-amber-100 mt-1">Equilibrado. Incremento constante de hordas.</span>
+                </button>
+
+                <button onclick="setDifficulty('dificil')" id="diff-dificil" class="diff-btn bg-orange-900/80 border-2 border-orange-500 hover:bg-orange-700 p-3 rounded-xl flex flex-col items-center transition-all">
+                    <span class="text-2xl mb-1">🔥</span>
+                    <span class="pvz-font text-lg text-orange-300">Difícil</span>
+                    <span class="text-[10px] text-orange-100 mt-1">Zombis más rápidos, hordas frecuentes y Zombiestein a mitad de ronda.</span>
+                </button>
+
+                <button onclick="setDifficulty('extremo')" id="diff-extremo" class="diff-btn bg-red-950/80 border-2 border-red-600 hover:bg-red-800 p-3 rounded-xl flex flex-col items-center transition-all">
+                    <span class="text-2xl mb-1">💀</span>
+                    <span class="pvz-font text-lg text-red-400">Extremo</span>
+                    <span class="text-[10px] text-red-200 mt-1">¡PESADILLA! Zombiestein y Fútbol aparecen desde el 1/3 del tiempo.</span>
+                </button>
             </div>
 
-            <button onclick="startGame()" class="pvz-font text-2xl bg-gradient-to-r from-emerald-500 to-green-600 hover:from-emerald-400 hover:to-green-500 text-white px-8 py-3 rounded-2xl border-4 border-yellow-300 shadow-2xl transition-transform hover:scale-105 active:scale-95">
+            <!-- Guide grid -->
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-2 text-left bg-emerald-950/80 p-3 rounded-xl border border-emerald-700 max-w-3xl mb-4 text-[11px]">
+                <div>🌻 <strong>Girasol (50):</strong> Producción de sol.</div>
+                <div>🌱 <strong>Lanzaguisantes (100):</strong> Disparo básico.</div>
+                <div>🛡️ <strong>Nuez (50):</strong> Escudo de alta vida.</div>
+                <div>💥 <strong>Petacereza (150):</strong> Explosión 3x3.</div>
+                <div>❄️ <strong>Guisante Helado (175):</strong> Ralentiza.</div>
+                <div>🌿 <strong>Repetidor (200):</strong> Disparo doble.</div>
+                <div>💣 <strong>Papatum (25):</strong> Mina destructiva.</div>
+                <div>🍉 <strong>Lanzasandías (300):</strong> Daño pesado en área.</div>
+            </div>
+
+            <button onclick="startGame()" class="pvz-font text-2xl bg-gradient-to-r from-emerald-500 to-green-600 hover:from-emerald-400 hover:to-green-500 text-white px-8 py-2.5 rounded-2xl border-4 border-yellow-300 shadow-2xl transition-transform hover:scale-105 active:scale-95">
                 ¡EMPEZAR A JUGAR! 🌻🧟
             </button>
         </div>
@@ -209,126 +236,146 @@
    PLANTAS VS ZOMBIS - ENGINE & LOGIC
    ========================================================================== */
 
-// --- Audio Synthesizer (Web Audio API) ---
-class SoundController {
+// --- Canvas & Grid Constants ---
+const CANVAS_WIDTH = 1000;
+const CANVAS_HEIGHT = 600;
+const ROWS = 5;
+const COLS = 9;
+const CELL_WIDTH = 95;
+const CELL_HEIGHT = 100;
+const GRID_OFFSET_X = 120;
+const GRID_OFFSET_Y = 80;
+
+const GAME_DURATION_SECONDS = 420; // 7 Minutes
+
+// Selected Difficulty Configuration
+let selectedDifficulty = 'normal'; // 'facil', 'normal', 'dificil', 'extremo'
+
+// Web Audio API Sound & Soundtrack Synthesizer
+class SoundSystem {
     constructor() {
         this.ctx = null;
         this.muted = false;
+        this.bgmTimer = null;
+        this.noteIndex = 0;
     }
-
     init() {
         if (!this.ctx) {
-            this.ctx = new (window.AudioContext || window.webkitAudioContext)();
+            const AudioCtx = window.AudioContext || window.webkitAudioContext;
+            if (AudioCtx) this.ctx = new AudioCtx();
+        }
+        if (this.ctx && this.ctx.state === 'suspended') {
+            this.ctx.resume();
         }
     }
+    startMusic() {
+        if (this.bgmTimer) clearInterval(this.bgmTimer);
+        // PVZ Melody Motif Approximation Synthesizer
+        const melody = [261.63, 293.66, 329.63, 349.23, 392.00, 329.63, 261.63, 220.00];
+        const tempo = selectedDifficulty === 'extremo' ? 220 : selectedDifficulty === 'dificil' ? 280 : 350;
+        
+        this.bgmTimer = setInterval(() => {
+            if (this.muted || !this.ctx || !gameRunning || gamePaused) return;
+            const freq = melody[this.noteIndex % melody.length];
+            this.noteIndex++;
 
-    playShoot() {
+            const osc = this.ctx.createOscillator();
+            const gain = this.ctx.createGain();
+            osc.type = 'sine';
+            osc.frequency.setValueAtTime(freq, this.ctx.currentTime);
+            gain.gain.setValueAtTime(0.04, this.ctx.currentTime);
+            gain.gain.exponentialRampToValueAtTime(0.001, this.ctx.currentTime + 0.25);
+            osc.connect(gain);
+            gain.connect(this.ctx.destination);
+            osc.start();
+            osc.stop(this.ctx.currentTime + 0.25);
+        }, tempo);
+    }
+    stopMusic() {
+        if (this.bgmTimer) {
+            clearInterval(this.bgmTimer);
+            this.bgmTimer = null;
+        }
+    }
+    playSun() {
         if (this.muted || !this.ctx) return;
         const osc = this.ctx.createOscillator();
         const gain = this.ctx.createGain();
         osc.type = 'sine';
-        osc.frequency.setValueAtTime(600, this.ctx.currentTime);
-        osc.frequency.exponentialRampToValueAtTime(150, this.ctx.currentTime + 0.1);
-        gain.gain.setValueAtTime(0.15, this.ctx.currentTime);
+        osc.frequency.setValueAtTime(523.25, this.ctx.currentTime);
+        osc.frequency.exponentialRampToValueAtTime(1046.50, this.ctx.currentTime + 0.15);
+        gain.gain.setValueAtTime(0.3, this.ctx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.01, this.ctx.currentTime + 0.15);
+        osc.connect(gain);
+        gain.connect(this.ctx.destination);
+        osc.start();
+        osc.stop(this.ctx.currentTime + 0.15);
+    }
+    playShoot() {
+        if (this.muted || !this.ctx) return;
+        const osc = this.ctx.createOscillator();
+        const gain = this.ctx.createGain();
+        osc.type = 'triangle';
+        osc.frequency.setValueAtTime(300, this.ctx.currentTime);
+        osc.frequency.exponentialRampToValueAtTime(80, this.ctx.currentTime + 0.1);
+        gain.gain.setValueAtTime(0.2, this.ctx.currentTime);
         gain.gain.exponentialRampToValueAtTime(0.01, this.ctx.currentTime + 0.1);
         osc.connect(gain);
         gain.connect(this.ctx.destination);
         osc.start();
         osc.stop(this.ctx.currentTime + 0.1);
     }
-
-    playSun() {
-        if (this.muted || !this.ctx) return;
-        const osc = this.ctx.createOscillator();
-        const gain = this.ctx.createGain();
-        osc.type = 'triangle';
-        osc.frequency.setValueAtTime(523.25, this.ctx.currentTime); // C5
-        osc.frequency.setValueAtTime(659.25, this.ctx.currentTime + 0.08); // E5
-        gain.gain.setValueAtTime(0.2, this.ctx.currentTime);
-        gain.gain.exponentialRampToValueAtTime(0.01, this.ctx.currentTime + 0.25);
-        osc.connect(gain);
-        gain.connect(this.ctx.destination);
-        osc.start();
-        osc.stop(this.ctx.currentTime + 0.25);
-    }
-
     playExplosion() {
         if (this.muted || !this.ctx) return;
         const osc = this.ctx.createOscillator();
         const gain = this.ctx.createGain();
         osc.type = 'sawtooth';
         osc.frequency.setValueAtTime(120, this.ctx.currentTime);
-        osc.frequency.exponentialRampToValueAtTime(30, this.ctx.currentTime + 0.4);
-        gain.gain.setValueAtTime(0.4, this.ctx.currentTime);
-        gain.gain.exponentialRampToValueAtTime(0.01, this.ctx.currentTime + 0.4);
+        osc.frequency.exponentialRampToValueAtTime(30, this.ctx.currentTime + 0.3);
+        gain.gain.setValueAtTime(0.5, this.ctx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.01, this.ctx.currentTime + 0.3);
         osc.connect(gain);
         gain.connect(this.ctx.destination);
         osc.start();
-        osc.stop(this.ctx.currentTime + 0.4);
+        osc.stop(this.ctx.currentTime + 0.3);
     }
-
     playChomp() {
         if (this.muted || !this.ctx) return;
         const osc = this.ctx.createOscillator();
         const gain = this.ctx.createGain();
         osc.type = 'square';
-        osc.frequency.setValueAtTime(200, this.ctx.currentTime);
-        osc.frequency.setValueAtTime(100, this.ctx.currentTime + 0.05);
-        gain.gain.setValueAtTime(0.1, this.ctx.currentTime);
-        gain.gain.exponentialRampToValueAtTime(0.01, this.ctx.currentTime + 0.1);
+        osc.frequency.setValueAtTime(180, this.ctx.currentTime);
+        osc.frequency.exponentialRampToValueAtTime(60, this.ctx.currentTime + 0.08);
+        gain.gain.setValueAtTime(0.15, this.ctx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.01, this.ctx.currentTime + 0.08);
         osc.connect(gain);
         gain.connect(this.ctx.destination);
         osc.start();
-        osc.stop(this.ctx.currentTime + 0.1);
-    }
-
-    playLawnmower() {
-        if (this.muted || !this.ctx) return;
-        const osc = this.ctx.createOscillator();
-        const gain = this.ctx.createGain();
-        osc.type = 'sawtooth';
-        osc.frequency.setValueAtTime(100, this.ctx.currentTime);
-        osc.frequency.linearRampToValueAtTime(300, this.ctx.currentTime + 0.5);
-        gain.gain.setValueAtTime(0.25, this.ctx.currentTime);
-        gain.gain.exponentialRampToValueAtTime(0.01, this.ctx.currentTime + 0.5);
-        osc.connect(gain);
-        gain.connect(this.ctx.destination);
-        osc.start();
-        osc.stop(this.ctx.currentTime + 0.5);
+        osc.stop(this.ctx.currentTime + 0.08);
     }
 }
+const sounds = new SoundSystem();
 
-const sounds = new SoundController();
-
-// --- Game Configurations & Data ---
-const CANVAS_WIDTH = 1000;
-const CANVAS_HEIGHT = 600;
-const ROWS = 5;
-const COLS = 9;
-const GRID_OFFSET_X = 140;
-const GRID_OFFSET_Y = 80;
-const CELL_WIDTH = 90;
-const CELL_HEIGHT = 100;
-const GAME_DURATION_SECONDS = 600; // 10 Minutes
-
-// Plants Catalog
+// Plants Catalog (Including Melon-pult / Lanzasandías)
 const PLANT_TYPES = {
-    SUNFLOWER: { id: 'sunflower', name: 'Girasol', cost: 50, cooldown: 5, hp: 100, emoji: '🌻', desc: 'Genera sol' },
-    PEASHOOTER: { id: 'peashooter', name: 'Lanzaguisantes', cost: 100, cooldown: 5, hp: 120, emoji: '🌱', desc: 'Dispara guisantes' },
-    WALLNUT: { id: 'wallnut', name: 'Nuez', cost: 50, cooldown: 15, hp: 600, emoji: '🛡️', desc: 'Escudo resistente' },
+    SUNFLOWER: { id: 'sunflower', name: 'Girasol', cost: 50, cooldown: 5, hp: 120, emoji: '🌻', desc: 'Genera sol' },
+    PEASHOOTER: { id: 'peashooter', name: 'Lanzaguisantes', cost: 100, cooldown: 5, hp: 150, emoji: '🌱', desc: 'Disparo básico' },
+    WALLNUT: { id: 'wallnut', name: 'Nuez', cost: 50, cooldown: 15, hp: 800, emoji: '🛡️', desc: 'Escudo resistente' },
     CHERRYBOMB: { id: 'cherrybomb', name: 'Petacereza', cost: 150, cooldown: 20, hp: 300, emoji: '💥', desc: 'Explosión 3x3' },
-    SNOWPEA: { id: 'snowpea', name: 'Guisante Helado', cost: 175, cooldown: 7.5, hp: 120, emoji: '❄️', desc: 'Disparo helado' },
-    REPEATER: { id: 'repeater', name: 'Repetidor', cost: 200, cooldown: 7.5, hp: 120, emoji: '🌿', desc: 'Disparo doble' },
-    POTATOMINE: { id: 'potatomine', name: 'Papatum', cost: 25, cooldown: 12, hp: 100, emoji: '💣', desc: 'Mina explosiva' }
+    SNOWPEA: { id: 'snowpea', name: 'Guisante Helado', cost: 175, cooldown: 7.5, hp: 150, emoji: '❄️', desc: 'Disparo helado' },
+    REPEATER: { id: 'repeater', name: 'Repetidor', cost: 200, cooldown: 7.5, hp: 150, emoji: '🌿', desc: 'Disparo doble' },
+    POTATOMINE: { id: 'potatomine', name: 'Papatum', cost: 25, cooldown: 12, hp: 120, emoji: '💣', desc: 'Mina explosiva' },
+    MELONPULT: { id: 'melonpult', name: 'Lanzasandías', cost: 300, cooldown: 10, hp: 200, emoji: '🍉', desc: 'Daño masivo en área' }
 };
 
 // Zombie Catalog
 const ZOMBIE_TYPES = {
-    BASIC: { type: 'basic', hp: 100, speed: 0.35, emoji: '🧟', name: 'Normal' },
-    CONEHEAD: { type: 'conehead', hp: 260, speed: 0.35, emoji: '🧟‍♂️', armorEmoji: '📐', name: 'Cono' },
-    BUCKETHEAD: { type: 'buckethead', hp: 500, speed: 0.32, emoji: '🧟‍♂️', armorEmoji: '🪣', name: 'Cubeta' },
-    NEWSPAPER: { type: 'newspaper', hp: 200, speed: 0.3, angrySpeed: 0.85, emoji: '🧟‍♂️', armorEmoji: '📰', name: 'Periódico' },
-    FOOTBALL: { type: 'football', hp: 450, speed: 0.75, emoji: '🏈', name: 'Fútbol' }
+    BASIC: { type: 'basic', hp: 150, speed: 0.22, emoji: '🧟', name: 'Normal' },
+    CONEHEAD: { type: 'conehead', hp: 380, speed: 0.22, emoji: '🧟‍♂️', armorEmoji: '📐', name: 'Cono' },
+    BUCKETHEAD: { type: 'buckethead', hp: 750, speed: 0.20, emoji: '🧟‍♂️', armorEmoji: '🪣', name: 'Cubeta' },
+    NEWSPAPER: { type: 'newspaper', hp: 320, speed: 0.18, angrySpeed: 0.55, emoji: '🧟‍♂️', armorEmoji: '📰', name: 'Periódico' },
+    FOOTBALL: { type: 'football', hp: 650, speed: 0.45, emoji: '🏈', name: 'Fútbol' },
+    GARGANTUAR: { type: 'gargantuar', hp: 2200, speed: 0.14, emoji: '👹', weaponEmoji: '🪵', name: 'Zombiestein' }
 };
 
 // --- Game State Variables ---
@@ -340,7 +387,7 @@ let suns = 150;
 let selectedPlant = null;
 let isShovelSelected = false;
 
-let grid = []; // 5x9 matrix for plants
+let grid = [];
 let lawnmowers = [];
 let projectiles = [];
 let zombies = [];
@@ -352,6 +399,17 @@ let plantCooldowns = {};
 let lastFrameTime = 0;
 let zombieSpawnTimer = 0;
 let skySunTimer = 0;
+
+function setDifficulty(diff) {
+    selectedDifficulty = diff;
+    document.querySelectorAll('.diff-btn').forEach(btn => {
+        btn.classList.remove('scale-105', 'ring-4', 'ring-yellow-400');
+    });
+    const activeBtn = document.getElementById(`diff-${diff}`);
+    if (activeBtn) {
+        activeBtn.classList.add('scale-105', 'ring-4', 'ring-yellow-400');
+    }
+}
 
 // Initialize Plant Cooldown tracking
 Object.keys(PLANT_TYPES).forEach(key => {
@@ -391,6 +449,7 @@ window.onload = function() {
     ctx = canvas.getContext('2d');
 
     buildSeedBankUI();
+    setDifficulty('normal');
     
     // Canvas Click Listener
     canvas.addEventListener('click', handleCanvasClick);
@@ -536,7 +595,7 @@ function placePlant(plantData, row, col) {
         maxHp: plantData.hp,
         currentHp: plantData.hp,
         actionTimer: 0,
-        armed: plantData.id !== 'potatomine', // Potato mine needs arming time
+        armed: plantData.id !== 'potatomine',
         armTimer: plantData.id === 'potatomine' ? 12 : 0,
         frameOffset: Math.random() * 10
     };
@@ -576,6 +635,7 @@ function restartGame() {
     document.getElementById('screen-defeat').classList.add('hidden');
     document.getElementById('screen-victory').classList.add('hidden');
 
+    sounds.startMusic();
     lastFrameTime = performance.now();
     requestAnimationFrame(gameLoop);
 }
@@ -602,7 +662,7 @@ function toggleAudio() {
 function gameLoop(timestamp) {
     if (!gameRunning || gamePaused) return;
 
-    const dt = Math.min((timestamp - lastFrameTime) / 1000, 0.1); // Delta time in seconds
+    const dt = Math.min((timestamp - lastFrameTime) / 1000, 0.1);
     lastFrameTime = timestamp;
 
     update(dt);
@@ -639,7 +699,7 @@ function update(dt) {
 
     // 2. Random Sun Drop from Sky (RNG)
     skySunTimer += dt;
-    if (skySunTimer >= 7.5) { // Every ~7.5s
+    if (skySunTimer >= 7.5) {
         skySunTimer = 0;
         const spawnX = GRID_OFFSET_X + Math.random() * (COLS * CELL_WIDTH - 40);
         const targetY = GRID_OFFSET_Y + Math.random() * (ROWS * CELL_HEIGHT - 40);
@@ -666,14 +726,21 @@ function update(dt) {
         }
     }
 
-    // 3. Zombie Spawning Mechanics (Scaling RNG)
+    // 3. Zombie Spawning Mechanics with Difficulty Scaling
     zombieSpawnTimer += dt;
-    // Spawn rate speeds up as time progresses (From 12s down to 2.5s)
-    const currentSpawnInterval = Math.max(2.5, 12 - (timePassed / GAME_DURATION_SECONDS) * 9.5);
+    
+    let baseInterval = 12;
+    let minInterval = 2.5;
+    
+    if (selectedDifficulty === 'facil') { baseInterval = 14; minInterval = 4.0; }
+    else if (selectedDifficulty === 'dificil') { baseInterval = 9; minInterval = 2.0; }
+    else if (selectedDifficulty === 'extremo') { baseInterval = 6; minInterval = 1.2; }
+
+    const currentSpawnInterval = Math.max(minInterval, baseInterval - (timePassed / GAME_DURATION_SECONDS) * (baseInterval - minInterval));
 
     if (zombieSpawnTimer >= currentSpawnInterval) {
         zombieSpawnTimer = 0;
-        spawnRandomZombie(timePassed);
+        spawnZombieGroup(timePassed);
     }
 
     // 4. Update Grid Plants
@@ -707,13 +774,14 @@ function update(dt) {
                 }
             }
 
-            // Shooting Plants Logic (Peashooter, Snowpea, Repeater)
-            if (['peashooter', 'snowpea', 'repeater'].includes(plant.id)) {
-                // Check if any zombie in this row is ahead of the plant
+            // Shooting Plants Logic (Peashooter, Snowpea, Repeater, Melonpult)
+            if (['peashooter', 'snowpea', 'repeater', 'melonpult'].includes(plant.id)) {
                 const plantX = GRID_OFFSET_X + c * CELL_WIDTH + CELL_WIDTH / 2;
                 const zombieInRow = zombies.some(z => z.row === r && z.x > plantX);
 
-                if (zombieInRow && plant.actionTimer >= 1.4) {
+                const shootDelay = plant.id === 'melonpult' ? 2.5 : 1.4;
+
+                if (zombieInRow && plant.actionTimer >= shootDelay) {
                     plant.actionTimer = 0;
                     sounds.playShoot();
 
@@ -732,6 +800,8 @@ function update(dt) {
                                 sounds.playShoot();
                             }
                         }, 150);
+                    } else if (plant.id === 'melonpult') {
+                        projectiles.push({ x: fireX, y: fireY, row: r, speed: 250, type: 'melon', damage: 80, splash: true });
                     }
                 }
             }
@@ -744,15 +814,14 @@ function update(dt) {
                 
                 createExplosionParticles(centerPx, centerPy, '#ef4444', 35);
 
-                // Area 3x3 Damage
                 zombies.forEach(z => {
                     const zCellCol = Math.floor((z.x - GRID_OFFSET_X) / CELL_WIDTH);
                     if (Math.abs(z.row - r) <= 1 && Math.abs(zCellCol - c) <= 1) {
-                        z.hp -= 1200; // Insta kill most zombies
+                        z.hp -= 1200;
                     }
                 });
 
-                grid[r][c] = null; // Self destruct
+                grid[r][c] = null;
             }
         }
     }
@@ -762,17 +831,29 @@ function update(dt) {
         const p = projectiles[i];
         p.x += p.speed * dt;
 
-        // Collision check with zombies
         let hit = false;
         for (let j = 0; j < zombies.length; j++) {
             const z = zombies[j];
             if (z.row === p.row && Math.abs(z.x - p.x) < 25) {
                 z.hp -= p.damage;
                 if (p.type === 'freeze') {
-                    z.slowTimer = 3.5; // Slow down for 3.5 sec
+                    z.slowTimer = 3.5;
                 }
+                
+                // Melon Splash Damage (Affects adjacent rows/cells)
+                if (p.splash) {
+                    sounds.playExplosion();
+                    createExplosionParticles(p.x, p.y, '#15803d', 20);
+                    zombies.forEach(otherZ => {
+                        if (otherZ !== z && Math.hypot(otherZ.x - p.x, (otherZ.row - p.row) * CELL_HEIGHT) < 120) {
+                            otherZ.hp -= p.damage * 0.5;
+                        }
+                    });
+                } else {
+                    createExplosionParticles(p.x, p.y, p.type === 'freeze' ? '#38bdf8' : '#22c55e', 5);
+                }
+
                 hit = true;
-                createExplosionParticles(p.x, p.y, p.type === 'freeze' ? '#38bdf8' : '#22c55e', 5);
                 break;
             }
         }
@@ -786,31 +867,29 @@ function update(dt) {
     for (let i = zombies.length - 1; i >= 0; i--) {
         const z = zombies[i];
 
-        // Check death
         if (z.hp <= 0) {
             createExplosionParticles(z.x, z.y, '#4b5563', 15);
             zombies.splice(i, 1);
             continue;
         }
 
-        // Slow Status Effect
-        let currentSpeed = z.speed;
+        let speedMultiplier = selectedDifficulty === 'extremo' ? 1.4 : selectedDifficulty === 'dificil' ? 1.2 : 1.0;
+        let currentSpeed = z.speed * speedMultiplier;
+
         if (z.type === 'newspaper' && z.newspaperBroken) {
-            currentSpeed = ZOMBIE_TYPES.NEWSPAPER.angrySpeed;
+            currentSpeed = ZOMBIE_TYPES.NEWSPAPER.angrySpeed * speedMultiplier;
         }
         if (z.slowTimer > 0) {
             z.slowTimer -= dt;
             currentSpeed *= 0.5;
         }
 
-        // Check collision with plant ahead
         const col = Math.floor((z.x - GRID_OFFSET_X) / CELL_WIDTH);
         let isEating = false;
 
         if (col >= 0 && col < COLS) {
             const plant = grid[z.row][col];
             if (plant) {
-                // Potato Mine Explosion
                 if (plant.id === 'potatomine' && plant.armed) {
                     sounds.playExplosion();
                     createExplosionParticles(z.x, z.y, '#f59e0b', 25);
@@ -819,17 +898,28 @@ function update(dt) {
                     continue;
                 }
 
-                // Eat plant
-                isEating = true;
-                plant.currentHp -= 25 * dt;
-                z.eatTimer = (z.eatTimer || 0) + dt;
-                if (z.eatTimer >= 0.4) {
-                    sounds.playChomp();
-                    z.eatTimer = 0;
-                }
+                if (z.type === 'gargantuar') {
+                    isEating = true;
+                    z.eatTimer = (z.eatTimer || 0) + dt;
+                    if (z.eatTimer >= 0.8) {
+                        sounds.playExplosion();
+                        createExplosionParticles(GRID_OFFSET_X + col * CELL_WIDTH + CELL_WIDTH / 2, GRID_OFFSET_Y + z.row * CELL_HEIGHT + CELL_HEIGHT / 2, '#78350f', 20);
+                        addFloatingText('¡APLASTADO!', z.x, z.y - 30, '#dc2626');
+                        grid[z.row][col] = null;
+                        z.eatTimer = 0;
+                    }
+                } else {
+                    isEating = true;
+                    plant.currentHp -= 35 * dt;
+                    z.eatTimer = (z.eatTimer || 0) + dt;
+                    if (z.eatTimer >= 0.35) {
+                        sounds.playChomp();
+                        z.eatTimer = 0;
+                    }
 
-                if (plant.currentHp <= 0) {
-                    grid[z.row][col] = null;
+                    if (plant.currentHp <= 0) {
+                        grid[z.row][col] = null;
+                    }
                 }
             }
         }
@@ -838,103 +928,128 @@ function update(dt) {
             z.x -= currentSpeed * 60 * dt;
         }
 
-        // Newspaper mechanic check
-        if (z.type === 'newspaper' && !z.newspaperBroken && z.hp <= 100) {
+        if (z.type === 'newspaper' && !z.newspaperBroken && z.hp <= 150) {
             z.newspaperBroken = true;
-            addFloatingText('¡ENRABADO!', z.x, z.y - 20, '#ef4444');
+            addFloatingText('¡ENRABIADO!', z.x, z.y - 20, '#ef4444');
         }
 
-        // Lawnmower Triggering
+        // Lawnmower Triggering & Logic
         const mower = lawnmowers[z.row];
         if (mower && !mower.used && z.x <= mower.x + 20) {
             mower.active = true;
         }
 
-        // Defeat Condition: Zombie reaches house
+        if (mower && mower.active) {
+            mower.x += mower.speed * 60 * dt;
+            if (Math.abs(z.x - mower.x) < 40) {
+                z.hp = 0;
+            }
+            if (mower.x > CANVAS_WIDTH) {
+                mower.active = false;
+                mower.used = true;
+            }
+        }
+
         if (z.x < GRID_OFFSET_X - 60) {
             triggerDefeat('Un zombi ha invadido tu casa.');
             return;
         }
     }
 
-    // 7. Update Lawnmowers
-    lawnmowers.forEach(mower => {
-        if (mower.active) {
-            if (!mower.soundPlayed) {
-                sounds.playLawnmower();
-                mower.soundPlayed = true;
-            }
-            mower.x += mower.speed * 60 * dt;
-            // Instakill zombies in path
-            zombies.forEach(z => {
-                if (z.row === mower.row && Math.abs(z.x - mower.x) < 30) {
-                    z.hp = 0;
-                }
-            });
-            if (mower.x > CANVAS_WIDTH) {
-                mower.active = false;
-                mower.used = true;
-            }
-        }
-    });
-
-    // 8. Update FX / Floating Texts & Particles
-    for (let i = floatingTexts.length - 1; i >= 0; i--) {
-        const ft = floatingTexts[i];
-        ft.y -= 20 * dt;
-        ft.alpha -= 1.0 * dt;
-        if (ft.alpha <= 0) floatingTexts.splice(i, 1);
-    }
-
+    // 7. Update Particles & Text Animations
     for (let i = particles.length - 1; i >= 0; i--) {
         const p = particles[i];
-        p.x += p.vx * dt * 60;
-        p.y += p.vy * dt * 60;
-        p.alpha -= 1.5 * dt;
+        p.x += p.vx;
+        p.y += p.vy;
+        p.alpha -= dt * 1.5;
         if (p.alpha <= 0) particles.splice(i, 1);
+    }
+
+    for (let i = floatingTexts.length - 1; i >= 0; i--) {
+        const ft = floatingTexts[i];
+        ft.y -= dt * 25;
+        ft.alpha -= dt * 0.8;
+        if (ft.alpha <= 0) floatingTexts.splice(i, 1);
     }
 }
 
-// --- Zombie RNG Spawn Mechanics ---
-function spawnRandomZombie(timePassed) {
-    const row = Math.floor(Math.random() * ROWS);
+// --- Zombie Group & Horde RNG Spawn Mechanics ---
+function spawnZombieGroup(timePassed) {
     const progress = timePassed / GAME_DURATION_SECONDS;
 
-    // Weighted RNG for zombie types based on time
+    let groupSize = 1;
+    const rng = Math.random();
+
+    // Dificultad Extrema desbloquea zombis temprano (a partir del 1/3 de tiempo)
+    const bossThreshold = selectedDifficulty === 'extremo' ? 0.33 : selectedDifficulty === 'dificil' ? 0.50 : 0.85;
+
+    if (progress > 0.85) {
+        groupSize = selectedDifficulty === 'extremo' ? 4 : rng < 0.6 ? 3 : 2;
+    } else if (progress > 0.6) {
+        groupSize = selectedDifficulty === 'extremo' ? 3 : rng < 0.5 ? 2 : 1;
+    } else if (progress > 0.33) {
+        groupSize = selectedDifficulty === 'extremo' ? 2 : 1;
+    }
+
     let pool = [ZOMBIE_TYPES.BASIC];
-    if (progress > 0.15) pool.push(ZOMBIE_TYPES.CONEHEAD);
-    if (progress > 0.35) pool.push(ZOMBIE_TYPES.NEWSPAPER);
-    if (progress > 0.50) pool.push(ZOMBIE_TYPES.BUCKETHEAD);
-    if (progress > 0.70) pool.push(ZOMBIE_TYPES.FOOTBALL);
+    if (progress > 0.10) pool.push(ZOMBIE_TYPES.CONEHEAD);
+    if (progress > 0.20 || selectedDifficulty === 'extremo') pool.push(ZOMBIE_TYPES.NEWSPAPER);
+    if (progress > 0.30 || selectedDifficulty === 'extremo') pool.push(ZOMBIE_TYPES.BUCKETHEAD);
+    if (progress > 0.45 || selectedDifficulty === 'extremo') pool.push(ZOMBIE_TYPES.FOOTBALL);
+    if (progress >= bossThreshold) pool.push(ZOMBIE_TYPES.GARGANTUAR);
 
-    const typeConfig = pool[Math.floor(Math.random() * pool.length)];
+    // Guaranteed Gargantuar at final phase or early in Extreme
+    if (progress >= bossThreshold && (progress >= 0.85 || selectedDifficulty === 'extremo')) {
+        const row = Math.floor(Math.random() * ROWS);
+        zombies.push({
+            ...ZOMBIE_TYPES.GARGANTUAR,
+            row: row,
+            x: CANVAS_WIDTH + 40,
+            y: GRID_OFFSET_Y + row * CELL_HEIGHT + CELL_HEIGHT / 2,
+            maxHp: ZOMBIE_TYPES.GARGANTUAR.hp,
+            hp: ZOMBIE_TYPES.GARGANTUAR.hp,
+            slowTimer: 0,
+            newspaperBroken: false
+        });
+    }
 
-    zombies.push({
-        ...typeConfig,
-        row: row,
-        x: CANVAS_WIDTH + 30,
-        y: GRID_OFFSET_Y + row * CELL_HEIGHT + CELL_HEIGHT / 2,
-        maxHp: typeConfig.hp,
-        hp: typeConfig.hp,
-        slowTimer: 0,
-        newspaperBroken: false
-    });
+    for (let i = 0; i < groupSize; i++) {
+        const row = Math.floor(Math.random() * ROWS);
+        const typeConfig = pool[Math.floor(Math.random() * pool.length)];
 
-    // Display wave warning text on HUD periodically
-    if (Math.random() < 0.2) {
-        let waveText = progress > 0.75 ? "🔴 OLEADA FINAL" : (progress > 0.4 ? "⚠️ Gran Oleada" : "🌊 Oleada Normal");
-        document.getElementById('wave-display').innerText = `Oleada: ${waveText}`;
+        const xOffset = i * (40 + Math.random() * 30);
+
+        zombies.push({
+            ...typeConfig,
+            row: row,
+            x: CANVAS_WIDTH + 30 + xOffset,
+            y: GRID_OFFSET_Y + row * CELL_HEIGHT + CELL_HEIGHT / 2,
+            maxHp: typeConfig.hp,
+            hp: typeConfig.hp,
+            slowTimer: 0,
+            newspaperBroken: false
+        });
+    }
+
+    if (progress >= bossThreshold) {
+        document.getElementById('wave-display').innerText = `Oleada: 👹 ¡AMENAZA ZOMBIESTEIN!`;
+    } else if (progress > 0.5) {
+        document.getElementById('wave-display').innerText = `Oleada: ⚠️ Oleada Pesada`;
+    } else {
+        document.getElementById('wave-display').innerText = `Oleada: 🌊 Oleada Normal`;
     }
 }
 
 // --- Game End Screens ---
 function triggerVictory() {
     gameRunning = false;
+    sounds.stopMusic();
     document.getElementById('screen-victory').classList.remove('hidden');
 }
 
 function triggerDefeat(reason) {
     gameRunning = false;
+    sounds.stopMusic();
     document.getElementById('defeat-reason').innerText = reason;
     document.getElementById('screen-defeat').classList.remove('hidden');
 }
@@ -970,11 +1085,9 @@ function drawScene() {
             const cellX = GRID_OFFSET_X + c * CELL_WIDTH;
             const cellY = GRID_OFFSET_Y + r * CELL_HEIGHT;
 
-            // Checkerboard pattern
             ctx.fillStyle = (r + c) % 2 === 0 ? '#2e7d32' : '#388e3c';
             ctx.fillRect(cellX, cellY, CELL_WIDTH, CELL_HEIGHT);
 
-            // Grid borders
             ctx.strokeStyle = 'rgba(0,0,0,0.08)';
             ctx.strokeRect(cellX, cellY, CELL_WIDTH, CELL_HEIGHT);
         }
@@ -1004,13 +1117,11 @@ function drawScene() {
                 const px = GRID_OFFSET_X + c * CELL_WIDTH + CELL_WIDTH / 2;
                 const py = GRID_OFFSET_Y + r * CELL_HEIGHT + CELL_HEIGHT / 2;
 
-                // Draw Plant Base/Emoji
                 ctx.save();
                 ctx.font = '40px serif';
                 ctx.textAlign = 'center';
                 ctx.textBaseline = 'middle';
 
-                // Subtle animation bobbing
                 const bob = Math.sin(Date.now() * 0.005 + plant.frameOffset) * 3;
 
                 if (plant.id === 'potatomine' && !plant.armed) {
@@ -1021,7 +1132,6 @@ function drawScene() {
                 }
                 ctx.restore();
 
-                // Health Bar (if damaged)
                 if (plant.currentHp < plant.maxHp) {
                     const hpPercent = Math.max(0, plant.currentHp / plant.maxHp);
                     ctx.fillStyle = 'rgba(0,0,0,0.5)';
@@ -1037,14 +1147,18 @@ function drawScene() {
     projectiles.forEach(p => {
         ctx.save();
         ctx.beginPath();
-        ctx.arc(p.x, p.y, 8, 0, Math.PI * 2);
-        ctx.fillStyle = p.type === 'freeze' ? '#38bdf8' : '#4ade80';
+        if (p.splash) {
+            ctx.arc(p.x, p.y, 12, 0, Math.PI * 2);
+            ctx.fillStyle = '#15803d';
+        } else {
+            ctx.arc(p.x, p.y, 8, 0, Math.PI * 2);
+            ctx.fillStyle = p.type === 'freeze' ? '#38bdf8' : '#4ade80';
+        }
         ctx.fill();
         ctx.lineWidth = 2;
-        ctx.strokeStyle = '#15803d';
+        ctx.strokeStyle = '#064e3b';
         ctx.stroke();
 
-        // Glow highlight
         ctx.beginPath();
         ctx.arc(p.x - 2, p.y - 2, 2.5, 0, Math.PI * 2);
         ctx.fillStyle = '#FFF';
@@ -1055,35 +1169,37 @@ function drawScene() {
     // 5. Draw Zombies
     zombies.forEach(z => {
         ctx.save();
-        ctx.font = '42px serif';
+        ctx.font = z.type === 'gargantuar' ? '54px serif' : '42px serif';
         ctx.textAlign = 'center';
         ctx.textBaseline = 'middle';
 
-        // Slow effect blue tint tinting preview
         if (z.slowTimer > 0) {
             ctx.fillStyle = '#38bdf8';
             ctx.beginPath();
-            ctx.arc(z.x, z.y, 22, 0, Math.PI * 2);
+            ctx.arc(z.x, z.y, z.type === 'gargantuar' ? 30 : 22, 0, Math.PI * 2);
             ctx.fill();
         }
 
         ctx.fillText(z.emoji, z.x, z.y);
 
-        // Armor Overlay
-        if (z.armorEmoji && (z.type !== 'newspaper' || !z.newspaperBroken)) {
+        if (z.type === 'gargantuar') {
+            ctx.font = '30px serif';
+            ctx.fillText(z.weaponEmoji, z.x + 22, z.y - 10);
+        } else if (z.armorEmoji && (z.type !== 'newspaper' || !z.newspaperBroken)) {
             ctx.font = '24px serif';
             ctx.fillText(z.armorEmoji, z.x, z.y - 22);
         }
 
         ctx.restore();
 
-        // Zombie HP Bar
         if (z.hp < z.maxHp) {
             const hpPercent = Math.max(0, z.hp / z.maxHp);
+            const barWidth = z.type === 'gargantuar' ? 50 : 40;
+            const barYOffset = z.type === 'gargantuar' ? 48 : 40;
             ctx.fillStyle = 'rgba(0,0,0,0.6)';
-            ctx.fillRect(z.x - 20, z.y - 40, 40, 5);
-            ctx.fillStyle = '#ef4444';
-            ctx.fillRect(z.x - 20, z.y - 40, 40 * hpPercent, 5);
+            ctx.fillRect(z.x - barWidth / 2, z.y - barYOffset, barWidth, 6);
+            ctx.fillStyle = hpPercent > 0.5 ? '#ef4444' : '#991b1b';
+            ctx.fillRect(z.x - barWidth / 2, z.y - barYOffset, barWidth * hpPercent, 6);
         }
     });
 
